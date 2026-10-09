@@ -1,0 +1,1206 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#EDEFF2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121316" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Acba Self">
+<meta name="format-detection" content="telephone=no">
+<title>Acba Self</title>
+<link rel="manifest" href="/manifest.webmanifest?v=__ICON_VER__">
+<link rel="apple-touch-icon" href="/icon-__ICON_VER__-180.png">
+<link rel="icon" type="image/png" href="/icon-__ICON_VER__-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;600;700&family=Noto+Sans+Armenian:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDEFF2; --surface:#FFFFFF; --surface-2:#F2F3F6; --seg-on:#FFFFFF;
+  --text:#15161A; --muted:#696E78; --line:#E2E4E9; --bar:#2B2E35;
+  --accent:#A3263F; --accent-ink:#FFFFFF; --pos:#1B8A5E; --danger:#C7362F;
+  --hero:#741B31; --hero-2:#5A1426; --hero-text:#FFF5F3; --hero-muted:rgba(255,236,236,.66); --hero-line:rgba(255,236,236,.16);
+  --ring:0 0 0 1px var(--line);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#121316; --surface:#1B1C20; --surface-2:#24252A; --seg-on:#34363C;
+    --text:#EEEFF2; --muted:#979BA5; --line:#2D2F35; --bar:#D6D8DE;
+    --accent:#E35A73; --accent-ink:#1B0A0F; --pos:#3DC48E; --danger:#F0675F;
+    --hero:#5C1527; --hero-2:#43101D;
+    color-scheme:dark;
+  }
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Golos Text','Noto Sans Armenian',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:15px;line-height:1.4;-webkit-font-smoothing:antialiased;min-height:100vh}
+body.noscroll{overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:12.5px}
+.pos{color:var(--pos)}
+.cur{font-family:'Noto Sans Armenian','Golos Text',sans-serif}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+[hidden]{display:none!important}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.app{max-width:1120px;margin:0 auto;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+@media(min-width:700px){.app{padding:max(24px,env(safe-area-inset-top)) 24px 40px}}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 18px}
+.hello{min-width:0}
+.hello h1{font-size:21px;font-weight:600;margin:0;letter-spacing:-.01em}
+.hello p{margin:3px 0 0;color:var(--muted);font-size:13.5px}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);padding:8px 11px;border-radius:999px;background:var(--surface);box-shadow:var(--ring);white-space:nowrap;flex:none}
+.status svg.i{width:15px;height:15px}
+.status.loading svg.i{animation:spin 1s linear infinite}
+
+/* notices */
+.notice{display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:18px;padding:12px 12px 12px 16px;margin-bottom:16px;box-shadow:var(--ring)}
+.notice p{margin:0;flex:1;font-size:14px;min-width:0}
+.notice .btn{height:38px;padding:0 14px;font-size:14px;flex:none}
+.notice .share{display:inline-block;vertical-align:-3px;width:16px;height:16px;color:var(--accent)}
+.notice-x{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;color:var(--muted);flex:none}
+
+/* layout */
+.grid{display:grid;gap:16px}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+@media(min-width:900px){
+  .grid{grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);align-items:start;gap:20px}
+  .col{gap:20px}
+  .col-right{position:sticky;top:20px}
+  .tx{max-height:calc(100vh - 40px);display:flex;flex-direction:column}
+  .tx-list{overflow:auto;flex:1;min-height:0}
+}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:20px 20px 18px;color:var(--hero-text);background:linear-gradient(165deg,var(--hero) 0%,var(--hero-2) 100%);isolation:isolate}
+.hero::after,.auth-hero::after{content:"֏";position:absolute;right:-18px;bottom:-92px;font-family:'Noto Sans Armenian',sans-serif;font-weight:600;font-size:300px;line-height:1;color:#fff;opacity:.06;z-index:-1;pointer-events:none}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hero-card{display:flex;align-items:center;gap:12px;min-width:0}
+.card-thumb{width:64px;height:41px;border-radius:7px;object-fit:cover;flex:none;box-shadow:0 6px 16px rgba(0,0,0,.28)}
+.card-thumb.fallback{display:grid;place-items:end start;padding:5px 7px;font-size:10px;font-weight:600;background:linear-gradient(135deg,#2E3138,#15161A);color:#fff}
+.card-name{font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-pan{font-size:13px;color:var(--hero-muted)}
+.cur-pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.12);flex:none}
+.hero-label{margin-top:22px;font-size:14px;color:var(--hero-muted);display:flex;align-items:center;gap:6px}
+.hero-tap{cursor:pointer;-webkit-user-select:none;user-select:none;border-radius:14px}
+.hero-label .eye-ico{width:16px;height:16px;opacity:.85}
+/* скрытые суммы: размытие, без выделения текста */
+.secret{transition:filter .2s ease}
+body.hide-amounts .secret{filter:blur(9px);-webkit-user-select:none;user-select:none}
+body.hide-amounts .hero-balance.secret{filter:blur(14px)}
+.hero-balance{font-family:'Unbounded','Golos Text',sans-serif;font-weight:600;font-size:clamp(32px,9.4vw,46px);letter-spacing:-.025em;line-height:1.08;margin-top:4px;white-space:nowrap}
+.hero-balance .cur{font-weight:500;font-size:.62em;margin-left:.18em;opacity:.8}
+.hero-rub{margin-top:6px;font-size:16px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.hero-rub .rate{font-size:13px;color:var(--hero-muted)}
+.hero-split{display:grid;grid-template-columns:1fr 1fr;margin-top:20px;border-top:1px solid var(--hero-line);padding-top:14px;gap:12px}
+.hero-split span{display:block;font-size:12.5px;color:var(--hero-muted)}
+.hero-split b{display:block;font-weight:600;font-size:16px;margin-top:2px}
+.hero-split .r{font-size:12.5px;color:var(--hero-muted);font-weight:400}
+
+/* panels */
+.panel{background:var(--surface);border-radius:22px;padding:18px 16px}
+@media(min-width:700px){.panel{padding:20px}}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.panel-head h2{font-size:17px;font-weight:600;margin:0;letter-spacing:-.01em}
+.panel-head .sub{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* segmented */
+.seg{display:inline-flex;background:var(--surface-2);border-radius:12px;padding:3px;gap:2px;max-width:100%}
+.seg button{padding:7px 12px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--muted);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--seg-on);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* spending */
+.spend-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:14px;flex-wrap:wrap}
+.spend-total .big{font-family:'Unbounded','Golos Text',sans-serif;font-weight:600;font-size:clamp(26px,7vw,32px);letter-spacing:-.02em;line-height:1.1}
+.spend-total .big .cur{font-size:.66em;font-weight:500;opacity:.75;margin-left:.15em}
+.spend-total .r{color:var(--muted);margin-top:3px;font-size:14px}
+.spend-in{text-align:right}
+.spend-in span{display:block;font-size:12.5px;color:var(--muted)}
+.spend-in b{font-weight:600;font-size:15px}
+.month-nav{display:flex;gap:6px}
+.icon-btn{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--surface);box-shadow:var(--ring);color:var(--text)}
+.icon-btn:hover{background:var(--surface-2)}
+.icon-btn:disabled{opacity:.35;cursor:default}
+.chart{margin-top:18px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .hit{fill:transparent;cursor:pointer}
+.chart .bar{fill:var(--bar);transition:fill .15s,opacity .15s}
+.chart .bar.empty{fill:var(--line)}
+.chart .bar.future{fill:var(--line);opacity:.55}
+.chart .bar.today,.chart .bar.sel{fill:var(--accent)}
+.chart .bar-g:hover .bar:not(.today):not(.sel):not(.future){opacity:.7}
+.chart .avgline{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 4;opacity:.7}
+.chart-axis{position:relative;height:18px;margin-top:6px;font-size:11.5px;color:var(--muted)}
+.chart-axis span{position:absolute;top:0;transform:translateX(-50%)}
+.chart-info{font-size:13.5px;color:var(--muted);margin-top:6px;min-height:20px}
+.chart-info b{color:var(--text);font-weight:600}
+.catbar{display:flex;height:10px;border-radius:6px;overflow:hidden;gap:2px;margin:18px 0 6px;background:var(--surface-2)}
+.catbar i{display:block;height:100%;min-width:3px}
+.cats{list-style:none;margin:0 -6px;padding:0}
+.cat-row{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;padding:8px 6px;border-radius:14px}
+.cat-row:hover,.cat-row[aria-pressed="true"]{background:var(--surface-2)}
+.cat-row .ico{width:36px;height:36px}
+.cat-row .ico svg{width:18px;height:18px}
+.cat-name{font-weight:500;display:block}
+.cat-meta{font-size:12.5px;color:var(--muted);display:block}
+.cat-amt{text-align:right;font-weight:600;white-space:nowrap}
+.cat-amt small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+
+/* rates */
+.rub-spot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding:14px;border-radius:16px;background:var(--surface-2);flex-wrap:wrap}
+.rub-main{display:flex;align-items:center;gap:12px}
+.cur-badge{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:10px;background:var(--surface-2);font-weight:600;font-size:14px;flex:none}
+.cur-badge.big{width:42px;height:42px;border-radius:13px;font-size:20px;background:var(--surface);color:var(--accent)}
+.rub-rate{font-family:'Unbounded','Golos Text',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.01em}
+.rub-side{display:flex;gap:16px;font-size:14px}
+.rub-side span{display:block;font-size:12px;color:var(--muted)}
+.rub-side b{font-weight:600}
+.rub-inverse{margin-top:8px;font-size:13px;color:var(--muted)}
+.rates-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14.5px}
+.rates-table th{font-weight:500;color:var(--muted);font-size:12.5px;text-align:right;padding:6px 0 4px}
+.rates-table td{padding:9px 0;text-align:right;border-top:1px solid var(--line)}
+.rates-table th:first-child,.rates-table td:first-child{text-align:left}
+.rates-table .cur-cell{display:inline-flex;align-items:center;gap:10px}
+.rates-table td.cb{font-weight:600}
+.link{color:var(--accent);font-weight:500;font-size:14px;margin-top:6px;padding:6px 0}
+.conv{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;margin-top:14px}
+.conv-field{display:flex;align-items:center;gap:6px;background:var(--surface-2);border-radius:13px;padding:0 10px 0 12px;height:46px;min-width:0}
+.conv-field input{flex:1;min-width:0;width:100%;border:0;background:none;font-size:16px;font-weight:600;outline:none;font-variant-numeric:tabular-nums}
+.conv-field .unit{color:var(--muted);font-weight:500;flex:none}
+.conv-field select{border:0;background:none;color:var(--muted);font-weight:600;font-size:14px;outline:none;cursor:pointer;flex:none}
+.conv-eq{color:var(--muted);font-weight:600}
+.conv-note{font-size:13px;color:var(--muted);margin-top:8px}
+
+/* transactions */
+.tx-sum{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.tile{background:var(--surface-2);border-radius:14px;padding:10px 12px;min-width:0}
+.tile .k{font-size:12.5px;color:var(--muted)}
+.tile .v{font-weight:600;font-size:16px;white-space:nowrap}
+.tile .r{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.search{display:flex;align-items:center;gap:8px;height:44px;padding:0 12px;border-radius:13px;background:var(--surface-2);margin-top:12px;color:var(--muted)}
+.search input{flex:1;min-width:0;border:0;background:none;outline:none;font-size:16px;color:var(--text);-webkit-appearance:none;appearance:none}
+.search input::-webkit-search-cancel-button{-webkit-appearance:none}
+.chips:not(:empty){margin-top:10px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 8px 6px 10px;border-radius:999px;background:var(--surface-2);font-weight:500;font-size:13.5px}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.chip svg.i{width:16px;height:16px;color:var(--muted)}
+.tx-list{margin:6px -8px 0}
+.day-head{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--muted);padding:16px 8px 4px;font-weight:500}
+.day-head .num{white-space:nowrap}
+.tx-row{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;padding:9px 8px;border-radius:14px}
+.tx-row:hover{background:var(--surface-2)}
+.ico{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--c);background:var(--surface-2);background:color-mix(in srgb,var(--c) 15%,transparent)}
+.tx-main{min-width:0}
+.tx-title{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-sub{display:flex;gap:8px;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden}
+.tx-sub span{overflow:hidden;text-overflow:ellipsis}
+.tx-sub .t{flex:none}
+.tx-sub .pend{flex:none;display:inline-flex;align-items:center;gap:3px;color:var(--accent);font-weight:500}
+.tx-sub .pend svg.i{width:13px;height:13px;stroke-width:2}
+.tx-amt{text-align:right;white-space:nowrap}
+.tx-amt .v{display:block;font-weight:600}
+.tx-amt .r{display:block;font-size:12.5px;color:var(--muted)}
+.empty{text-align:center;color:var(--muted);padding:36px 12px}
+.empty svg.i{width:28px;height:28px;opacity:.6}
+.empty p{margin:8px 0 0}
+
+.foot{display:flex;flex-direction:column;align-items:center;gap:2px;padding:28px 0 0}
+.foot .ver{font-size:12px;color:var(--muted);opacity:.7}
+.foot button{color:var(--muted);font-size:14px;padding:10px 14px;border-radius:12px}
+.foot button:hover{background:var(--surface)}
+
+/* sheet */
+.sheet-wrap{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:rgba(12,10,12,.45);opacity:0;pointer-events:none;transition:opacity .2s}
+.sheet-wrap.open{opacity:1;pointer-events:auto}
+.sheet{position:relative;width:100%;max-width:520px;max-height:90vh;overflow:auto;background:var(--surface);border-radius:26px 26px 0 0;padding:8px 20px calc(24px + env(safe-area-inset-bottom));transform:translateY(28px);transition:transform .25s ease;outline:none}
+.sheet-wrap.open .sheet{transform:none}
+@media(min-width:700px){.sheet-wrap{align-items:center;padding:24px}.sheet{border-radius:26px;padding-top:12px}}
+.grabber{width:40px;height:4px;border-radius:2px;background:var(--line);margin:4px auto 10px}
+.sheet-close{position:absolute;top:12px;right:12px}
+.tx-detail{text-align:center;padding:10px 0 18px}
+.ico.lg{width:58px;height:58px;margin:0 auto 12px}
+.ico.lg svg{width:26px;height:26px}
+.tx-detail h3{margin:0;font-size:19px;font-weight:600;word-break:break-word}
+.detail-amt{font-family:'Unbounded','Golos Text',sans-serif;font-size:30px;font-weight:600;margin-top:14px;letter-spacing:-.02em}
+.detail-rub{color:var(--muted);margin-top:2px}
+.pill{display:inline-block;margin-top:12px;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--surface-2)}
+.pill.pending{color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.pill.done{color:var(--pos);background:color-mix(in srgb,var(--pos) 14%,transparent)}
+.kv{margin:0;border-top:1px solid var(--line)}
+.kv div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.kv dt{color:var(--muted);flex:none}
+.kv dd{margin:0;text-align:right;word-break:break-word}
+
+/* auth */
+.auth{position:fixed;inset:0;z-index:40;overflow:auto;background:var(--bg);padding:max(24px,env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom))}
+.auth-card{width:100%;max-width:420px;margin:0 auto}
+@media(min-height:760px){.auth-card{margin-top:6vh}}
+.auth-hero{position:relative;overflow:hidden;isolation:isolate;border-radius:28px;padding:26px 22px 24px;color:var(--hero-text);background:linear-gradient(165deg,var(--hero) 0%,var(--hero-2) 100%);margin-bottom:12px}
+.auth-hero h1{font-family:'Unbounded','Golos Text',sans-serif;font-weight:600;font-size:26px;letter-spacing:-.02em;margin:0}
+.auth-hero p{margin:8px 0 0;color:var(--hero-muted);font-size:14.5px;max-width:28ch}
+.auth-form{background:var(--surface);border-radius:22px;padding:20px}
+.auth-form h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.auth-form .lead{color:var(--muted);font-size:14px;margin:0 0 16px}
+.field{display:block;margin-bottom:12px}
+.field span{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.field input{width:100%;height:50px;border:0;border-radius:14px;background:var(--surface-2);padding:0 14px;font-size:17px;outline:none;box-shadow:var(--ring)}
+.field input:focus{box-shadow:0 0 0 2px var(--accent)}
+.field input.code{letter-spacing:.32em;font-variant-numeric:tabular-nums;font-weight:600;text-align:center;font-size:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:13px;font-weight:600;font-size:15px;cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:var(--surface-2)}
+.btn.wide{width:100%;height:50px;font-size:16px;margin-top:4px}
+.btn:disabled{opacity:.6;cursor:default}
+.form-err{color:var(--danger);font-size:14px;margin:12px 0 0}
+.form-err:empty{display:none}
+.fine{font-size:12.5px;color:var(--muted);margin:14px 0 0;line-height:1.45}
+.otp-help{margin:0 0 16px;background:var(--surface-2);border-radius:14px;overflow:hidden;box-shadow:var(--ring)}
+.otp-help img{display:block;width:100%;height:auto}
+.otp-help figcaption{padding:9px 12px;font-size:12.5px;color:var(--muted)}
+.auth-links{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:14px;flex-wrap:wrap}
+.auth-links button{color:var(--accent);font-weight:500;padding:6px 0}
+.loader{display:flex;flex-direction:column;align-items:center;gap:14px;padding:30px 0 22px;color:var(--muted)}
+.spinner{width:30px;height:30px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,16px);background:var(--text);color:var(--bg);padding:11px 16px;border-radius:13px;font-size:14px;max-width:calc(100% - 32px);width:max-content;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:60}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app" hidden>
+  <header class="topbar">
+    <div class="hello">
+      <h1 id="greet">Добрый день</h1>
+      <p id="today"></p>
+    </div>
+    <button class="status" id="status" data-action="refresh"></button>
+  </header>
+  <div id="notices"></div>
+
+  <main class="grid">
+    <div class="col">
+      <section class="hero" id="hero" aria-label="Баланс"></section>
+      <section class="panel" id="spend" aria-label="Траты за месяц"></section>
+      <section class="panel" id="rates" aria-label="Курс валют"></section>
+    </div>
+    <div class="col col-right">
+      <section class="panel tx" id="tx" aria-label="История операций">
+        <div class="panel-head"><div><h2>История операций</h2><div class="sub" id="txSub"></div></div></div>
+        <div id="txSummary"></div>
+        <label class="search"><span id="searchIco"></span><input id="q" type="search" placeholder="Поиск по операциям" autocomplete="off" aria-label="Поиск по операциям"></label>
+        <div class="chips" id="txChips"></div>
+        <div class="tx-list" id="txList"></div>
+      </section>
+    </div>
+  </main>
+  <footer class="foot"><button data-action="logout">Выйти</button><span class="ver">Версия __BUILD__</span></footer>
+</div>
+
+<div class="auth" id="auth" hidden>
+  <div class="auth-card">
+    <div class="auth-hero"><h1>Acba Self</h1><p>Вход тем же логином и паролем, что в Acba Digital</p></div>
+    <div class="auth-form" id="authBody"></div>
+  </div>
+</div>
+
+<div class="sheet-wrap" id="sheetWrap" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" tabindex="-1">
+    <div class="grabber"></div>
+    <button class="icon-btn sheet-close" data-action="close-sheet" aria-label="Закрыть" id="sheetClose"></button>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+
+/* =====================================================================
+   НАСТРОЙКИ
+   ===================================================================== */
+const CONFIG = {
+  timeZone: 'Asia/Yerevan',
+  apiBase: '/api/ru/v2/service/',   // запросы идут на тот же адрес, Worker пересылает их в банк
+  bankHost: 'www.acbadigital.am',
+  monthsBack: 1,                    // выписка грузится с 1-го числа прошлого месяца
+  autoRefreshSec: 90,               // при возврате в приложение обновлять, если данным больше 90 с
+};
+
+// Категории трат
+const CATS = {
+  groceries: { name: 'Продукты',        color: '#2E9F68', icon: 'cart' },
+  transport: { name: 'Транспорт',       color: '#3F74E8', icon: 'bus' },
+  taxi:      { name: 'Такси',           color: '#D99A1E', icon: 'car' },
+  cafe:      { name: 'Кафе и еда',      color: '#E0613F', icon: 'cup' },
+  shopping:  { name: 'Покупки',         color: '#8C5FD8', icon: 'bag' },
+  services:  { name: 'Связь и услуги',  color: '#C9488E', icon: 'phone' },
+  health:    { name: 'Здоровье',        color: '#D83F4F', icon: 'plus' },
+  cash:      { name: 'Наличные',        color: '#5F7590', icon: 'cash' },
+  transfers: { name: 'Переводы',        color: '#2C9FB4', icon: 'swap' },
+  income:    { name: 'Поступления',     color: '#1B8A5E', icon: 'in' },
+  other:     { name: 'Другое',          color: '#8A8F99', icon: 'dots' },
+};
+// Первое совпадение по названию/описанию операции определяет категорию
+const CATEGORY_RULES = [
+  [/TELCELL TRANSPORT|TRANSPORT|METRO|\bBUS\b/i,                                    'transport'],
+  [/YANDEX\.?\s?GO|TAXI|\bGG\b|BOLT/i,                                              'taxi'],
+  [/SUPERMARKET|YEREVAN CIT[YI]|ZEYTUN|\bSAS\b|CARREFOUR|PARMA|NOR ZOVQ|GROCERY|MARKET\s?PLUS/i, 'groceries'],
+  [/SALAD|CAFE|COFFEE|RESTAURANT|PIZZA|BURGER|\bBAR\b|KITCHEN|BAKERY|LAVASH|TAVERN|FOOD/i, 'cafe'],
+  [/PHARM|APTEKA|CLINIC|MEDICAL|DENTAL/i,                                           'health'],
+  [/UCOM|VIVA|BEELINE|TEAM TELECOM|ELECTRIC|GAZPROM|WATER|TELCELL/i,                 'services'],
+  [/\bATM\b|CASH/i,                                                                 'cash'],
+  [/MARKET|SHOP|STORE|MALL|WILDBERRIES|OZON|ALIEXPRESS/i,                           'shopping'],
+  [/ПЕРЕВОД|TRANSFER|P2P|CARD TO CARD/i,                                            'transfers'],
+];
+const NAME_ALIASES = [
+  [/^TELCELL TRANSPORT/i, 'Проезд'],
+  [/^YANDEX\.?\s?GO/i,    'Yandex Go'],
+  [/^YEREVAN CIT[YI]/i,   'Yerevan City'],
+  [/^ZEYTUN/i,            'Zeytun'],
+  [/^INECOBANK/i,         'Перевод из Inecobank'],
+];
+const KEEP_UPPER = new Set(['SAS','ATM','LLC','CJSC','OJSC','ООО','ИП']);
+
+/* =====================================================================
+   УТИЛИТЫ
+   ===================================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sum = a => a.reduce((s, x) => s + x, 0);
+const pad = n => String(n).padStart(2, '0');
+function load(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+function drop(k) { try { localStorage.removeItem(k); } catch (e) {} }
+function plural(n, f) { const a = Math.abs(n) % 100, b = a % 10; if (a > 10 && a < 20) return f[2]; if (b > 1 && b < 5) return f[1]; if (b === 1) return f[0]; return f[2]; }
+const OPS = ['операция', 'операции', 'операций'];
+
+const MON_GEN   = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const MON_NOM   = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const MON_SHORT = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+const WD_SHORT  = ['вс','пн','вт','ср','чт','пт','сб'];
+const WD_FULL   = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+
+function partsOf(date) {
+  const p = {};
+  new Intl.DateTimeFormat('en-GB', { timeZone: CONFIG.timeZone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+    .formatToParts(date).forEach(x => p[x.type] = x.value);
+  return p;
+}
+function todayStr() { const p = partsOf(new Date()); return `${p.year}-${p.month}-${p.day}`; }
+const dObj = s => new Date(s + 'T12:00:00Z');
+function addDays(s, n) { const d = dObj(s); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+function dayLabel(s) {
+  const t = todayStr();
+  if (s === t) return 'Сегодня';
+  if (s === addDays(t, -1)) return 'Вчера';
+  const d = dObj(s);
+  return `${d.getUTCDate()} ${MON_GEN[d.getUTCMonth()]}${s.slice(0, 4) !== t.slice(0, 4) ? ' ' + s.slice(0, 4) : ''}, ${WD_SHORT[d.getUTCDay()]}`;
+}
+function fullDate(s) { const d = dObj(s); return `${d.getUTCDate()} ${MON_GEN[d.getUTCMonth()]} ${d.getUTCFullYear()}, ${WD_FULL[d.getUTCDay()]}`; }
+function shortDate(s) { const d = dObj(s); return `${d.getUTCDate()} ${MON_SHORT[d.getUTCMonth()]}`; }
+function relDay(ds) { const t = todayStr(); return ds === t ? '' : ds === addDays(t, -1) ? 'вчера ' : shortDate(ds) + ' '; }
+function stampLocal(ms) { const p = partsOf(new Date(ms)); return `${relDay(`${p.year}-${p.month}-${p.day}`)}в ${p.hour}:${p.minute}`; }
+function stampApi(s) { s = String(s || ''); if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(s)) return ''; const r = relDay(s.slice(0, 10)); return `${r ? r : 'сегодня '}в ${s.slice(11, 16)}`; }
+function parsePeriod(p) {
+  const m = [...String(p || '').matchAll(/(\d{1,2})\/(\d{1,2})\/(\d{4})/g)];
+  if (m.length < 2) return null;
+  const f = x => `${x[3]}-${pad(x[1])}-${pad(x[2])}`;
+  return [f(m[0]), f(m[1])];
+}
+
+/* ---------- деньги и курсы ---------- */
+const NF0 = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+const NF2 = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const MINUS = '−', NB = ' ';
+const CUR_INFO = {
+  RUR: { code: 'RUB', sym: '₽' }, USD: { code: 'USD', sym: '$' }, EUR: { code: 'EUR', sym: '€' }, GBP: { code: 'GBP', sym: '£' },
+  CHF: { code: 'CHF', sym: 'Fr' }, GEL: { code: 'GEL', sym: '₾' }, AED: { code: 'AED', sym: 'Dh' }, CNY: { code: 'CNY', sym: '¥' },
+};
+const CUR_ORDER = ['RUR','USD','EUR','GBP','CHF','GEL','AED','CNY'];
+const RATE_KINDS = [['Card','Карта'],['NonCash','Безнал'],['Cash','Наличные']];
+const normCur = c => { c = String(c || '').toUpperCase(); return c === 'RUB' ? 'RUR' : c; };
+const curInfo = c => CUR_INFO[normCur(c)] || { code: normCur(c), sym: normCur(c) };
+
+function rateRow(cur, kind) {
+  const R = DATA?.rates?.Result; if (!R) return null;
+  const code = normCur(cur);
+  for (const k of [kind || prefs.rateKind, 'Card', 'NonCash', 'Cash']) {
+    const row = (R[k] || []).find(x => normCur(x.Currency) === code);
+    if (row) return row;
+  }
+  return null;
+}
+function rubRate() { const r = rateRow('RUR'); return r ? (Number(r.CB) || null) : null; }
+function toAmd(amount, cur) { const c = normCur(cur || 'AMD'); if (c === 'AMD') return amount; const r = rateRow(c); return r ? amount * (Number(r.CB) || Number(r.Buy) || 1) : amount; }
+function sgn(v, mode) { if (mode === 'always') return v < 0 ? MINUS : (v > 0 ? '+' : ''); if (mode === 'neg') return v < 0 ? MINUS : ''; return ''; }
+function fmtAmd(v, mode = 'neg') {
+  const a = Math.abs(v);
+  const s = Math.abs(a - Math.round(a)) > 0.004 ? NF2.format(a) : NF0.format(Math.round(a));
+  return sgn(Math.round(v * 100) / 100, mode) + s + NB + '֏';
+}
+function fmtRub(vAmd, mode = 'neg') {
+  const r = rubRate(); if (!r) return '';
+  const v = vAmd / r, a = Math.abs(v);
+  return sgn(Math.round(v * 100) / 100, mode) + (a < 1000 ? NF2 : NF0).format(a) + NB + '₽';
+}
+function fmtOrig(t) { return sgn(t.sign, 'always') + NF2.format(t.amount) + NB + curInfo(t.currency).code; }
+function bigAmd(v) { return `${NF0.format(Math.round(Math.abs(v)))}<span class="cur">֏</span>`; }
+
+/* ---------- иконки ---------- */
+const ICONS = {
+  bus:   '<rect x="4.5" y="3" width="15" height="14" rx="3"/><path d="M4.5 10.5h15M8 17v3M16 17v3"/><path d="M8 14h.01M16 14h.01"/>',
+  car:   '<path d="M5 15.5 6.7 10a2 2 0 0 1 1.9-1.4h6.8a2 2 0 0 1 1.9 1.4l1.7 5.5"/><rect x="3.5" y="15.5" width="17" height="3.5" rx="1.2"/><path d="M6.5 19v1.5M17.5 19v1.5M10 5.5h4"/>',
+  cart:  '<path d="M3 4h2.2l2.3 11h10.3l2-8H6.3"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/>',
+  cup:   '<path d="M4.5 9h12v4.5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5z"/><path d="M16.5 10.5h1.2a2.3 2.3 0 0 1 0 4.6h-1.5"/><path d="M8.5 3.5c-.6.9.6 1.6 0 2.5M12.5 3.5c-.6.9.6 1.6 0 2.5"/>',
+  bag:   '<path d="M5.5 8h13l-1 12.5h-11z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/>',
+  phone: '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
+  plus:  '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><path d="M12 8v8M8 12h8"/>',
+  cash:  '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6.5 9.5h.01M17.5 14.5h.01"/>',
+  swap:  '<path d="M4 8h15M15 4l4 4-4 4"/><path d="M20 16H5M9 12l-4 4 4 4"/>',
+  in:    '<path d="M12 3.5v11M7.5 10l4.5 4.5 4.5-4.5"/><path d="M4 15.5V19a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-3.5"/>',
+  dots:  '<circle cx="6" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.4" fill="currentColor" stroke="none"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  eye:   '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
+  eyeOff:'<path d="M3 3l18 18"/><path d="M10.6 5.6A9.7 9.7 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a16 16 0 0 1-3.1 3.9M6.2 6.9C3.9 8.6 2.5 12 2.5 12S6 18.5 12 18.5c1.6 0 3-.4 4.2-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
+  refresh:'<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4.5h-4.5"/>',
+  share: '<path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/>',
+  chevL: '<path d="M14.5 6 8.5 12l6 6"/>',
+  chevR: '<path d="m9.5 6 6 6-6 6"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>',
+  x:     '<path d="M6 6l12 12M18 6 6 18"/>',
+};
+const icon = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ''}</svg>`;
+
+/* =====================================================================
+   ХРАНИЛИЩЕ НА УСТРОЙСТВЕ
+   ===================================================================== */
+const KEY = {
+  session: 'mybank.session.v2',   // { token, exp }
+  cache:   'mybank.cache.v2',     // последние загруженные ответы банка
+  user:    'mybank.user.v2',      // логин (без пароля)
+  pan:     'mybank.pan.v2',       // { [ProductId]: номер карты }
+  prefs:   'mybank.prefs.v2',
+  hint:    'mybank.installHint.v2',
+};
+const prefs = Object.assign({ rateKind: 'Card', hide: false }, load(KEY.prefs, {}));
+// режим «скрыть суммы»: размываются баланс, итоги и траты за месяц, остальное видно
+function applyHide() { document.body.classList.toggle('hide-amounts', !!prefs.hide); }
+function toggleHide() {
+  prefs.hide = !prefs.hide; savePrefs(); applyHide();
+  const t = $('.hero-tap');
+  if (t) {
+    t.setAttribute('aria-pressed', String(prefs.hide));
+    t.setAttribute('aria-label', prefs.hide ? 'Показать суммы' : 'Скрыть суммы');
+    const ico = t.querySelector('.eye-ico');
+    if (ico) ico.outerHTML = icon(prefs.hide ? 'eyeOff' : 'eye', 'eye-ico');
+  }
+}
+const savePrefs = () => save(KEY.prefs, prefs);
+
+let DATA = load(KEY.cache, null);   // { cards, rates, statement, pending, at }
+
+function jwtExp(token) {
+  try {
+    const p = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const json = JSON.parse(decodeURIComponent(escape(atob(p + '==='.slice((p.length + 3) % 4)))));
+    return Number(json.exp) * 1000 || 0;
+  } catch (e) { return 0; }
+}
+function getSession() { const s = load(KEY.session, null); return s && s.token ? s : null; }
+function sessionValid() { const s = getSession(); return !!(s && (!s.exp || s.exp - Date.now() > 20000)); }
+function setSession(token) { save(KEY.session, { token, exp: jwtExp(token) || (Date.now() + 55 * 60000) }); }
+function clearSession() { drop(KEY.session); }
+function getPan(productId) { const m = load(KEY.pan, {}); return m[productId] || null; }
+function setPan(productId, pan) { const m = load(KEY.pan, {}); m[productId] = pan; save(KEY.pan, m); }
+
+/* =====================================================================
+   API БАНКА (через Worker на этом же адресе)
+   ===================================================================== */
+class ApiError extends Error { constructor(msg, kind) { super(msg); this.kind = kind; } }
+function reqId() {
+  const a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  const r = n => Array.from(crypto.getRandomValues(new Uint8Array(n)), b => a[b & 63]).join('');
+  return `|${r(5)}.${r(5)}`;
+}
+async function api(path, { body, auth = true, sessionId, version } = {}) {
+  const headers = { 'Accept': 'application/json, text/plain, */*', 'Request-Id': reqId() };
+  if (body !== undefined) headers['Content-Type'] = 'application/json';
+  const s = getSession();
+  if (auth && s) headers['Authorization'] = 'Bearer ' + s.token;
+  if (sessionId) headers['SessionId'] = sessionId;
+  if (version) headers['API-Version'] = String(version);
+  let res;
+  try {
+    res = await fetch(CONFIG.apiBase + path, { method: 'POST', headers, body: body !== undefined ? JSON.stringify(body) : undefined, credentials: 'same-origin', cache: 'no-store' });
+  } catch (e) { throw new ApiError('Нет связи. Проверьте интернет и попробуйте ещё раз.', 'network'); }
+  if (res.status === 401 || res.status === 403) throw new ApiError('Сессия банка закончилась, войдите снова', 'auth');
+  let json = null;
+  try { json = await res.json(); } catch (e) {}
+  if (!json || typeof json !== 'object') {
+    if (res.status === 404) throw new ApiError('Сервер не знает этот запрос — проверьте, что приложение открыто по адресу Worker’а', 'http');
+    throw new ApiError(`Банк ответил ошибкой ${res.status}. Попробуйте позже.`, 'http');
+  }
+  if (json.ResultCode !== 1) {
+    const msg = String(json.Description || (json.Result && json.Result.Message) || json.ResultCodeDescription || 'Банк вернул ошибку').trim();
+    // «Unauthorized», «Non authorized», «Not authorized», истёкший токен или сессия — всё это конец сессии
+    const authy = /authori[sz]|forbidden|token|session|expired|login|сесси|авториз/i.test(`${json.ResultCodeDescription || ''} ${msg}`);
+    throw new ApiError(msg, authy && auth ? 'auth' : 'bank');
+  }
+  return json;
+}
+
+async function fetchStatement(pan) {
+  const t = todayStr();
+  const [y, m] = t.split('-').map(Number);
+  const from = new Date(Date.UTC(y, m - 1 - CONFIG.monthsBack, 1)).toISOString().slice(0, 10);
+  const base = {
+    CardNumber: pan, DebCred: null, MinAmount: -1, MaxAmount: -1, FilterType: 1,
+    DateFrom: `${from}T00:00:00+04:00`, DateTo: `${t}T00:00:00+04:00`,
+    OrderByAscDesc: '0', PageNumber: 1, TransactionsCount: 0,
+  };
+  const first = await api('Card/GetCardStatement', { body: base, version: 2 });
+  const pages = Math.min(Number(first.Result?.PageCount) || 1, 20);
+  for (let p = 2; p <= pages; p++) {
+    const next = await api('Card/GetCardStatement', { body: { ...base, PageNumber: p }, version: 2 });
+    first.Result.GroupTransactions = (first.Result.GroupTransactions || []).concat(next.Result?.GroupTransactions || []);
+  }
+  return first;
+}
+async function loadAll() {
+  const [rates, cards] = await Promise.all([api('rates/getrates'), api('HomePage/GetCards')]);
+  const card = cards.Result?.Content?.[0];
+  if (!card) throw new ApiError('Банк не вернул ни одной карты', 'bank');
+  const pan = card.CardNumber || getPan(card.ProductId);
+  if (!pan) return { needPan: true, card, rates, cards };
+  const [statement, pending] = await Promise.all([
+    fetchStatement(pan),
+    api('Card/GetPendingTransactions', { body: { productId: card.ProductId } }),
+  ]);
+  return { cards, rates, statement, pending, at: Date.now() };
+}
+
+/* =====================================================================
+   РАЗБОР ОПЕРАЦИЙ
+   ===================================================================== */
+function titleCase(s) {
+  return s.split(/(\s+)/).map(w => {
+    if (/^\s+$/.test(w)) return w;
+    if (KEEP_UPPER.has(w.toUpperCase())) return w.toUpperCase();
+    return w.toLowerCase().replace(/(^|[-./(«"])(\p{L})/gu, (m, p, c) => p + c.toUpperCase());
+  }).join('');
+}
+function prettyName(t) {
+  const title = String(t.Title || '').trim();
+  if (/memorial order|payment from account/i.test(title)) return t.Correspondent || 'Зачисление на счёт';
+  for (const [re, name] of NAME_ALIASES) if (re.test(title)) return name;
+  const s = title.replace(/^["'«\s]+|["'»\s]+$/g, '').replace(/\s+\d+[A-Z]?$/i, '').trim();
+  return (/[a-z]/i.test(s) ? titleCase(s) : s) || title || 'Операция';
+}
+function prettyDesc(t) {
+  const d = String(t.Description || '').trim();
+  if (/^Purchase\b/i.test(d)) return 'Покупка';
+  if (/memorial order|payment from account/i.test(d)) return 'Зачисление на счёт';
+  if (/^Плат[её]ж$/i.test(d)) return 'Оплата картой';
+  return d || 'Операция';
+}
+function detectCat(t, sign) {
+  const hay = `${t.Title || ''} ${t.Description || ''}`;
+  if (sign > 0) return /ПЕРЕВОД|TRANSFER|P2P|CARD TO CARD|BANK/i.test(hay) && !/memorial order/i.test(hay) ? 'transfers' : 'income';
+  for (const [re, c] of CATEGORY_RULES) if (re.test(hay)) return c;
+  return 'other';
+}
+function normalize(raw, status) {
+  const res = raw?.Result ?? {};
+  const out = []; let i = 0;
+  for (const g of (res.GroupTransactions || [])) for (const t of (g.Transactions || [])) {
+    const sign = Number(t.DebitCredit) === 1 ? -1 : 1;
+    const amount = Math.abs(Number(t.Amount) || 0);
+    const amdAbs = toAmd(amount, t.Currency);
+    const ds = String(t.TransactionDate || t.AccountingDate || '');
+    const tm = ds.slice(11, 16);
+    out.push({
+      id: status + '-' + i, idx: i++, status, raw: t,
+      title: String(t.Title || ''), name: prettyName(t), desc: prettyDesc(t),
+      currency: t.Currency || 'AMD', amount, amdAbs, amdSigned: sign * amdAbs, sign,
+      date: /^\d{4}-\d{2}-\d{2}/.test(ds) ? ds.slice(0, 10) : todayStr(),
+      time: /^\d{2}:\d{2}$/.test(tm) && tm !== '00:00' ? tm : null,
+      cat: detectCat(t, sign),
+    });
+  }
+  return out;
+}
+function byNewest(a, b) {
+  if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+  if (a.status !== b.status) return a.status === 'pending' ? -1 : 1;
+  if ((a.time || '') !== (b.time || '')) return (a.time || '') < (b.time || '') ? 1 : -1;
+  return a.idx - b.idx;
+}
+
+let M = null;
+function compute() {
+  const card = DATA.cards?.Result?.Content?.[0] || null;
+  const st = DATA.statement?.Result || {};
+  const statement = normalize(DATA.statement, 'done');
+  const pending = normalize(DATA.pending, 'pending');
+  const all = [...pending, ...statement].sort(byNewest);
+  const pendOut = sum(pending.filter(t => t.sign < 0).map(t => t.amdAbs));
+  const pendIn = sum(pending.filter(t => t.sign > 0).map(t => t.amdAbs));
+  const stmtBalance = toAmd(Number(st.FinalBalance) || 0, st.Currency || card?.Currency || 'AMD');
+  const cardBalance = Number(card?.Balance) || 0;
+  // GetCards отдаёт Balance = 0, поэтому доступный остаток = остаток по выписке ± операции в обработке
+  const available = cardBalance > 0 ? toAmd(cardBalance, card.Currency) : stmtBalance - pendOut + pendIn;
+  const byId = {}; all.forEach(t => byId[t.id] = t);
+  return { card, st, pending, all, pendOut, pendIn, stmtBalance, available, byId, period: parsePeriod(st.Period) };
+}
+
+/* =====================================================================
+   ОТРИСОВКА
+   ===================================================================== */
+const state = { month: null, selDay: null, cat: null, q: '', showAllRates: false, conv: { from: 'amd', amd: '10000', fx: '', cur: 'RUR' }, loading: false };
+
+function greeting() { const h = +partsOf(new Date()).hour; return h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : h < 23 ? 'Добрый вечер' : 'Доброй ночи'; }
+function renderTop() {
+  $('#greet').textContent = greeting();
+  const t = todayStr(), d = dObj(t), wd = WD_FULL[d.getUTCDay()];
+  $('#today').textContent = `${wd[0].toUpperCase() + wd.slice(1)}, ${d.getUTCDate()} ${MON_GEN[d.getUTCMonth()]}`;
+  const st = $('#status');
+  st.classList.toggle('loading', state.loading);
+  if (state.loading) st.innerHTML = `${icon('refresh')}Обновляю…`;
+  else st.innerHTML = `${icon('refresh')}${DATA?.at ? 'Обновлено ' + stampLocal(DATA.at) : 'Обновить'}`;
+  st.title = sessionValid() ? 'Обновить данные' : 'Войти и обновить';
+  renderNotices();
+}
+function isIOS() { return /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+function isStandalone() { return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches; }
+function renderNotices() {
+  const out = [];
+  if (DATA && !sessionValid()) {
+    out.push(`<div class="notice"><p>Сессия банка закончилась, данные обновлены ${DATA.at ? stampLocal(DATA.at) : 'при прошлом входе'}.</p><button class="btn primary" data-action="login">Войти</button></div>`);
+  }
+  if (isIOS() && !isStandalone() && !load(KEY.hint, false)) {
+    out.push(`<div class="notice"><p>Добавьте на экран «Домой»: нажмите ${icon('share', 'share')} «Поделиться», затем «На экран „Домой“».</p><button class="notice-x" data-action="hide-hint" aria-label="Скрыть подсказку">${icon('x')}</button></div>`);
+  }
+  $('#notices').innerHTML = out.join('');
+}
+
+function renderHero() {
+  const c = M.card, r = rubRate();
+  const pan = c?.MaskedPan ? String(c.MaskedPan).replace(/\*/g, '•') : '';
+  const pendNet = M.pendIn - M.pendOut;
+  $('#hero').innerHTML = `
+    <div class="hero-top">
+      <div class="hero-card">
+        ${c?.CardDesignImage && /^https:\/\/(www\.)?acbadigital\.am\//.test(c.CardDesignImage) ? `<img class="card-thumb" id="cardImg" src="${esc(c.CardDesignImage)}" alt="">` : fallbackCardHtml(pan)}
+        <div style="min-width:0">
+          <div class="card-name">${esc(c ? titleCase(String(c.CardType || 'Карта')) : 'Карта')}</div>
+          <div class="card-pan num">${esc(pan)}</div>
+        </div>
+      </div>
+      <span class="cur-pill">${esc(c?.Currency || M.st.Currency || 'AMD')}</span>
+    </div>
+    <div class="hero-tap" data-action="toggle-hide" role="button" tabindex="0" aria-pressed="${!!prefs.hide}" aria-label="${prefs.hide ? 'Показать суммы' : 'Скрыть суммы'}">
+      <div class="hero-label">Доступный баланс ${icon(prefs.hide ? 'eyeOff' : 'eye', 'eye-ico')}</div>
+      <div class="hero-balance num secret">${M.available < 0 ? MINUS : ''}${bigAmd(M.available)}</div>
+      ${r ? `<div class="hero-rub num"><span class="secret">≈ ${fmtRub(M.available)}</span><span class="rate">1 ₽ = ${NF2.format(r)} ֏ по курсу ЦБ</span></div>` : ''}
+    </div>
+    <div class="hero-split">
+      <div><span>По выписке</span><b class="num secret">${fmtAmd(M.stmtBalance)}</b><span class="r num secret">${fmtRub(M.stmtBalance)}</span></div>
+      <div><span>В обработке</span><b class="num secret">${fmtAmd(pendNet, 'always')}</b><span class="r num">${M.pending.length} ${plural(M.pending.length, OPS)}</span></div>
+    </div>`;
+  const img = $('#cardImg');
+  if (img) img.addEventListener('error', () => { img.outerHTML = fallbackCardHtml(pan); }, { once: true });
+}
+const fallbackCardHtml = pan => `<span class="card-thumb fallback num">${esc(String(pan).slice(-4))}</span>`;
+
+/* ---------- траты за месяц ---------- */
+function monthsAvailable() {
+  const set = new Set(M.all.map(t => t.date.slice(0, 7)));
+  set.add(todayStr().slice(0, 7));
+  return [...set].sort();
+}
+function renderSpend() {
+  const months = monthsAvailable();
+  if (!state.month || !months.includes(state.month)) state.month = todayStr().slice(0, 7);
+  const ym = state.month, mi = months.indexOf(ym);
+  const [y, mo] = ym.split('-').map(Number);
+  const days = new Date(Date.UTC(y, mo, 0)).getUTCDate();
+  const tx = M.all.filter(t => t.date.startsWith(ym));
+  const out = tx.filter(t => t.sign < 0), inc = tx.filter(t => t.sign > 0);
+  const spent = sum(out.map(t => t.amdAbs)), received = sum(inc.map(t => t.amdAbs));
+  const today = todayStr(), curYm = today.slice(0, 7), isCur = ym === curYm, tDay = +today.slice(8, 10);
+  const elapsed = isCur ? tDay : (ym < curYm ? days : 0);
+  const avg = elapsed ? spent / elapsed : 0;
+
+  const per = Array(days).fill(0), cnt = Array(days).fill(0);
+  out.forEach(t => { const d = +t.date.slice(8, 10) - 1; per[d] += t.amdAbs; cnt[d]++; });
+  const max = Math.max(...per, 1);
+  const W = 620, H = 112, top = 6, slot = W / days, bw = Math.max(4, Math.min(13, slot * .62));
+  let bars = '';
+  for (let i = 0; i < days; i++) {
+    const day = i + 1, ds = `${ym}-${pad(day)}`, v = per[i];
+    const future = (isCur && day > tDay) || ym > curYm;
+    const h = v > 0 ? Math.max(5, v / max * (H - top)) : 3;
+    const cls = ['bar', v > 0 ? '' : 'empty', future ? 'future' : '', isCur && day === tDay ? 'today' : '', state.selDay === ds ? 'sel' : ''].join(' ');
+    bars += `<g class="bar-g" data-day="${ds}"><rect class="hit" x="${(i * slot).toFixed(2)}" y="0" width="${slot.toFixed(2)}" height="${H}"/>` +
+      `<rect class="${cls}" x="${(i * slot + (slot - bw) / 2).toFixed(2)}" y="${(H - h).toFixed(2)}" width="${bw.toFixed(2)}" height="${h.toFixed(2)}" rx="${Math.min(4, bw / 2).toFixed(1)}"><title>${shortDate(ds)}: ${v ? fmtAmd(-v) : 'трат нет'}</title></rect></g>`;
+  }
+  const avgY = H - avg / max * (H - top);
+  const avgLine = avg > 0 ? `<line class="avgline" x1="0" x2="${W}" y1="${avgY.toFixed(1)}" y2="${avgY.toFixed(1)}"/>` : '';
+  const ticks = [1, 8, 15, 22, days].map(d => `<span style="left:${((d - .5) / days * 100).toFixed(2)}%">${d}</span>`).join('');
+
+  let info;
+  if (state.selDay && state.selDay.startsWith(ym)) {
+    const d = +state.selDay.slice(8, 10) - 1;
+    info = `<b>${dayLabel(state.selDay)}</b>: ` + (cnt[d] ? `${fmtAmd(-per[d])} (${fmtRub(per[d])}), ${cnt[d]} ${plural(cnt[d], OPS)}` : 'трат не было');
+  } else if (spent && elapsed) {
+    info = `В среднем <b>${fmtAmd(Math.round(avg))}</b> в день` + (isCur && days > tDay ? `, при таком темпе за месяц выйдет около ${fmtAmd(Math.round(avg * days / 100) * 100)}` : '');
+  } else info = isCur ? 'В этом месяце трат пока нет' : 'Трат за этот месяц нет';
+
+  const byCat = {};
+  out.forEach(t => { const c = byCat[t.cat] || (byCat[t.cat] = { sum: 0, n: 0 }); c.sum += t.amdAbs; c.n++; });
+  const cats = Object.entries(byCat).sort((a, b) => b[1].sum - a[1].sum);
+
+  $('#spend').innerHTML = `
+    <div class="panel-head">
+      <div><h2>${MON_NOM[mo - 1]} ${y}</h2><div class="sub">Траты за месяц</div></div>
+      <div class="month-nav">
+        <button class="icon-btn" data-action="month" data-dir="-1" aria-label="Предыдущий месяц" ${mi <= 0 ? 'disabled' : ''}>${icon('chevL')}</button>
+        <button class="icon-btn" data-action="month" data-dir="1" aria-label="Следующий месяц" ${mi >= months.length - 1 ? 'disabled' : ''}>${icon('chevR')}</button>
+      </div>
+    </div>
+    <div class="spend-top">
+      <div class="spend-total">
+        <div class="big num secret">${bigAmd(spent)}</div>
+        <div class="r num secret">≈ ${fmtRub(spent)}</div>
+      </div>
+      <div class="spend-in"><span>Поступления</span><b class="num secret ${received ? 'pos' : ''}">${fmtAmd(received, 'always')}</b></div>
+    </div>
+    <div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Траты по дням">${avgLine}${bars}</svg></div>
+    <div class="chart-axis num">${ticks}</div>
+    <div class="chart-info">${info}</div>
+    ${cats.length ? `
+      <div class="catbar" aria-hidden="true">${cats.map(([k, v]) => `<i style="flex:${v.sum};background:${(CATS[k] || CATS.other).color}"></i>`).join('')}</div>
+      <ul class="cats">${cats.map(([k, v]) => {
+        const c = CATS[k] || CATS.other;
+        return `<li><button class="cat-row" data-action="cat" data-cat="${k}" aria-pressed="${state.cat === k}">
+          <span class="ico" style="--c:${c.color}">${icon(c.icon)}</span>
+          <span style="min-width:0"><span class="cat-name">${c.name}</span><span class="cat-meta">${v.n} ${plural(v.n, OPS)}, ${Math.round(v.sum / spent * 100)}%</span></span>
+          <span class="cat-amt num">${fmtAmd(v.sum)}<small>${fmtRub(v.sum)}</small></span>
+        </button></li>`;
+      }).join('')}</ul>` : ''}`;
+}
+
+/* ---------- курсы ---------- */
+function renderRates() {
+  const box = $('#rates'), R = DATA.rates?.Result;
+  if (!R) { box.innerHTML = `<div class="panel-head"><h2>Курс валют</h2></div><p class="muted">Курсы не загрузились. Обновите данные.</p>`; return; }
+  const kind = R[prefs.rateKind] ? prefs.rateKind : (RATE_KINDS.map(k => k[0]).find(k => R[k]) || 'Card');
+  const ord = c => { const i = CUR_ORDER.indexOf(normCur(c)); return i < 0 ? 99 : i; };
+  const rows = (R[kind] || []).slice().sort((a, b) => ord(a.Currency) - ord(b.Currency));
+  const rub = rows.find(x => normCur(x.Currency) === 'RUR');
+  const others = rows.filter(x => normCur(x.Currency) !== 'RUR');
+  const shown = state.showAllRates ? others : others.filter(x => ['USD', 'EUR'].includes(normCur(x.Currency)));
+  if (!rows.some(x => normCur(x.Currency) === state.conv.cur)) state.conv.cur = rows[0] ? normCur(rows[0].Currency) : 'RUR';
+  const upd = stampApi(R.LastUpdateDate);
+
+  box.innerHTML = `
+    <div class="panel-head">
+      <div><h2>Курс валют</h2>${upd ? `<div class="sub">Банк обновил ${upd}</div>` : ''}</div>
+      <div class="seg" role="group" aria-label="Тип курса">${RATE_KINDS.filter(([k]) => R[k]).map(([k, l]) => `<button data-action="rate-kind" data-kind="${k}" aria-pressed="${k === kind}">${l}</button>`).join('')}</div>
+    </div>
+    ${rub ? `
+      <div class="rub-spot">
+        <div class="rub-main"><span class="cur-badge big">₽</span>
+          <div><div class="rub-rate num">${NF2.format(rub.CB)} ֏</div><div class="small muted">за 1 рубль по курсу ЦБ</div></div>
+        </div>
+        <div class="rub-side num"><div><span>Банк покупает</span><b>${NF2.format(rub.Buy)}</b></div><div><span>Банк продаёт</span><b>${NF2.format(rub.Sell)}</b></div></div>
+      </div>
+      <div class="rub-inverse num">1 000 ֏ ≈ ${NF2.format(1000 / rub.CB)} ₽, 10 000 ֏ ≈ ${NF0.format(10000 / rub.CB)} ₽</div>` : ''}
+    <table class="rates-table num">
+      <thead><tr><th>Валюта</th><th>Покупка</th><th>Продажа</th><th>ЦБ</th></tr></thead>
+      <tbody>${shown.map(r => { const ci = curInfo(r.Currency); return `<tr><td><span class="cur-cell"><span class="cur-badge">${esc(ci.sym)}</span>${esc(ci.code)}</span></td><td>${NF2.format(r.Buy)}</td><td>${NF2.format(r.Sell)}</td><td class="cb">${NF2.format(r.CB)}</td></tr>`; }).join('')}</tbody>
+    </table>
+    ${others.length > 2 ? `<button class="link" data-action="rates-all">${state.showAllRates ? 'Свернуть' : `Все валюты (${others.length})`}</button>` : ''}
+    <div class="conv">
+      <label class="conv-field"><input id="convAmd" inputmode="decimal" autocomplete="off" aria-label="Сумма в драмах" value="${esc(state.conv.amd)}"><span class="unit cur">֏</span></label>
+      <span class="conv-eq">=</span>
+      <label class="conv-field"><input id="convFx" inputmode="decimal" autocomplete="off" aria-label="Сумма в валюте" value="${esc(state.conv.fx)}">
+        <select id="convCur" aria-label="Валюта">${rows.map(r => `<option value="${esc(normCur(r.Currency))}" ${normCur(r.Currency) === state.conv.cur ? 'selected' : ''}>${esc(curInfo(r.Currency).code)}</option>`).join('')}</select></label>
+    </div>
+    <div class="conv-note" id="convNote"></div>`;
+  updateConv();
+}
+const parseNum = s => { const v = parseFloat(String(s).replace(/[\s  ]/g, '').replace(',', '.')); return isFinite(v) ? v : 0; };
+const plainNum = (v, d) => (Math.round(v * 10 ** d) / 10 ** d).toString().replace('.', ',');
+function updateConv() {
+  const r = rateRow(state.conv.cur), note = $('#convNote'); if (!r || !note) return;
+  const cb = Number(r.CB) || Number(r.Buy), ci = curInfo(state.conv.cur);
+  const kindName = (RATE_KINDS.find(k => k[0] === prefs.rateKind) || [, 'карта'])[1].toLowerCase();
+  if (state.conv.from === 'amd') {
+    const a = parseNum($('#convAmd').value);
+    $('#convFx').value = state.conv.fx = a ? plainNum(a / cb, 2) : '';
+    note.textContent = a ? `По курсу ЦБ. Купить в банке (${kindName}) за ${NF0.format(a)} ֏ выйдет ≈ ${NF2.format(a / r.Sell)} ${ci.sym}` : 'Введите сумму в драмах или в валюте';
+  } else {
+    const f = parseNum($('#convFx').value);
+    $('#convAmd').value = state.conv.amd = f ? plainNum(f * cb, 0) : '';
+    note.textContent = f ? `По курсу ЦБ. Продать в банке (${kindName}) ${NF2.format(f)} ${ci.sym} выйдет ≈ ${NF0.format(f * r.Buy)} ֏` : 'Введите сумму в драмах или в валюте';
+  }
+}
+
+/* ---------- история ---------- */
+function txFilter(t) {
+  if (state.cat && (t.cat !== state.cat || !t.date.startsWith(state.month))) return false;
+  if (state.q) {
+    const hay = `${t.name} ${t.title} ${t.raw.Correspondent || ''} ${(CATS[t.cat] || CATS.other).name} ${t.desc} ${t.status === 'pending' ? 'в обработке' : ''}`.toLowerCase();
+    if (!hay.includes(state.q)) return false;
+  }
+  return true;
+}
+function rowHtml(t) {
+  const c = CATS[t.cat] || CATS.other;
+  const sub = (t.cat === 'income' || t.cat === 'transfers') ? t.desc : c.name;
+  return `<button class="tx-row" data-action="tx" data-id="${t.id}">
+    <span class="ico" style="--c:${c.color}">${icon(c.icon)}</span>
+    <span class="tx-main"><span class="tx-title">${esc(t.name)}</span><span class="tx-sub"><span>${esc(sub)}</span>${t.status === 'pending' ? `<span class="pend num" title="В обработке" aria-label="В обработке${t.time ? ', ' + t.time : ''}">${icon('clock')}${t.time || ''}</span>` : (t.time ? `<span class="t num">${t.time}</span>` : '')}</span></span>
+    <span class="tx-amt num"><span class="v ${t.sign > 0 ? 'pos' : ''}">${fmtAmd(t.amdSigned, 'always')}</span>${t.currency !== 'AMD' ? `<span class="r">${esc(fmtOrig(t))}</span>` : ''}<span class="r">${fmtRub(t.amdSigned, 'always')}</span></span>
+  </button>`;
+}
+function renderTx() {
+  const items = M.all.filter(txFilter);
+  const outS = sum(items.filter(t => t.sign < 0).map(t => t.amdAbs)), inS = sum(items.filter(t => t.sign > 0).map(t => t.amdAbs));
+  const first = M.period ? M.period[0] : (M.all.length ? M.all[M.all.length - 1].date : null);
+  $('#txSub').textContent = state.cat
+    ? `${(CATS[state.cat] || CATS.other).name}, ${MON_NOM[+state.month.slice(5, 7) - 1].toLowerCase()}`
+    : (first ? `С ${shortDate(first)} по сегодня, ${items.length} ${plural(items.length, OPS)}` : '');
+  $('#txSummary').innerHTML = `
+    <div class="tx-sum">
+      <div class="tile"><div class="k">Поступления</div><div class="v num secret ${inS ? 'pos' : ''}">${fmtAmd(inS, 'always')}</div><div class="r num secret">${fmtRub(inS, 'always')}</div></div>
+      <div class="tile"><div class="k">Списания</div><div class="v num secret">${fmtAmd(-outS, 'always')}</div><div class="r num secret">${fmtRub(-outS, 'always')}</div></div>
+    </div>`;
+  if (state.cat) {
+    const c = CATS[state.cat] || CATS.other, mo = +state.month.slice(5, 7) - 1;
+    $('#txChips').innerHTML = `<button class="chip" data-action="clear-cat" style="--c:${c.color}" aria-label="Сбросить фильтр"><i></i>${c.name}, ${MON_NOM[mo].toLowerCase()}${icon('x')}</button>`;
+  } else $('#txChips').innerHTML = '';
+
+  if (!items.length) {
+    const msg = state.q || state.cat ? 'Ничего не нашлось. Попробуйте другой запрос или сбросьте фильтр.' : 'Операций за этот период нет.';
+    $('#txList').innerHTML = `<div class="empty">${icon('search')}<p>${msg}</p></div>`;
+    return;
+  }
+  const groups = []; let g = null;
+  for (const t of items) { if (!g || g.date !== t.date) { g = { date: t.date, items: [] }; groups.push(g); } g.items.push(t); }
+  $('#txList').innerHTML = groups.map(g => {
+    const o = sum(g.items.filter(t => t.sign < 0).map(t => t.amdAbs)), i = sum(g.items.filter(t => t.sign > 0).map(t => t.amdAbs));
+    const tot = [i ? `<span class="pos">${fmtAmd(i, 'always')}</span>` : '', o ? fmtAmd(-o, 'always') : ''].filter(Boolean).join('&ensp;');
+    return `<div class="day"><div class="day-head"><span>${dayLabel(g.date)}</span><span class="num">${tot}</span></div>${g.items.map(rowHtml).join('')}</div>`;
+  }).join('');
+}
+
+function renderAll() {
+  if (!DATA) return;
+  M = compute();
+  $('#app').hidden = false;
+  renderTop(); renderHero(); renderSpend(); renderRates(); renderTx();
+}
+
+/* ---------- карточка операции ---------- */
+let sheetOpen = false, lastFocus = null;
+function openSheet(html) {
+  $('#sheetBody').innerHTML = html;
+  const w = $('#sheetWrap');
+  if (!sheetOpen) {
+    lastFocus = document.activeElement;
+    w.classList.add('open'); w.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('noscroll');
+    setTimeout(() => $('.sheet').focus(), 30);
+  }
+  sheetOpen = true;
+}
+function closeSheet() {
+  const w = $('#sheetWrap');
+  w.classList.remove('open'); w.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('noscroll');
+  sheetOpen = false;
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+function openTx(id) {
+  const t = M.byId[id]; if (!t) return;
+  const c = CATS[t.cat] || CATS.other, r = t.raw, rr = rubRate();
+  const rows = [
+    ['Дата операции', fullDate(t.date) + (t.time ? ', ' + t.time : '')],
+    r.AccountingDate ? ['Дата проводки', fullDate(String(r.AccountingDate).slice(0, 10))] : null,
+    ['Категория', c.name],
+    ['Тип', t.desc],
+    ['Название в банке', t.title],
+    r.Correspondent ? [t.sign > 0 ? 'Отправитель' : 'Получатель', r.Correspondent] : null,
+    r.CorrespondentAccountNumber ? ['Счёт', r.CorrespondentAccountNumber] : null,
+    t.currency !== 'AMD' ? ['Сумма в валюте', fmtOrig(t)] : null,
+    rr ? ['Пересчёт в рубли', `1 ₽ = ${NF2.format(rr)} ֏ по курсу ЦБ`] : null,
+  ].filter(Boolean);
+  openSheet(`
+    <div class="tx-detail">
+      <span class="ico lg" style="--c:${c.color}">${icon(c.icon)}</span>
+      <h3>${esc(t.name)}</h3>
+      <div class="detail-amt num ${t.sign > 0 ? 'pos' : ''}">${fmtAmd(t.amdSigned, 'always')}</div>
+      <div class="detail-rub num">${fmtRub(t.amdSigned, 'always')}</div>
+      <span class="pill ${t.status}">${t.status === 'pending' ? 'В обработке' : 'Проведена'}</span>
+    </div>
+    <dl class="kv">${rows.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`);
+}
+
+/* =====================================================================
+   ВХОД
+   ===================================================================== */
+const auth = { step: 'login', sessionId: null, user: '', pass: '', card: null, busy: false, dismissedAt: 0 };
+
+function showAuth(step, opts = {}) {
+  auth.step = step;
+  auth.busy = false;
+  if (opts.card) auth.card = opts.card;
+  const canCancel = !!DATA && step !== 'loading';
+  const body = $('#authBody');
+  if (step === 'login') {
+    body.innerHTML = `
+      <form id="fLogin" novalidate>
+        <h2>Вход</h2>
+        <label class="field"><span>Логин</span><input id="username" name="username" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" value="${esc(load(KEY.user, ''))}" required></label>
+        <label class="field"><span>Пароль</span><input id="password" name="password" type="password" autocomplete="current-password" required></label>
+        <button class="btn primary wide" type="submit">Продолжить</button>
+        <p class="form-err" role="alert"></p>
+        ${canCancel ? '<div class="auth-links"><button type="button" data-action="auth-cancel">Не сейчас</button></div>' : ''}
+      </form>`;
+  } else if (step === 'otp') {
+    body.innerHTML = `
+      <form id="fOtp" novalidate>
+        <h2>Код OTP</h2>
+        <p class="lead">Откройте приложение Acba Digital и нажмите «OTP» — оно покажет одноразовый код. Введите его здесь.</p>
+        <figure class="otp-help"><img src="__OTP_HELP__" alt="Кнопка OTP на экране входа Acba Digital" loading="lazy"><figcaption>Кнопка «OTP» на экране входа Acba Digital</figcaption></figure>
+        <label class="field"><span>Код OTP</span><input name="otp" class="code" inputmode="numeric" autocomplete="off" maxlength="10" required></label>
+        <button class="btn primary wide" type="submit">Войти</button>
+        <p class="form-err" role="alert"></p>
+        <div class="auth-links"><button type="button" data-action="auth-back">Назад</button></div>
+      </form>`;
+  } else if (step === 'pan') {
+    const last4 = String(auth.card?.MaskedPan || '').replace(/\D/g, '').slice(-4);
+    body.innerHTML = `
+      <form id="fPan" novalidate>
+        <h2>Номер карты</h2>
+        <p class="lead">Для выписки банк просит полный номер карты${last4 ? ` •••• ${esc(last4)}` : ''}. Его нужно ввести один раз, он сохранится только на этом телефоне.</p>
+        <label class="field"><span>Номер карты</span><input name="pan" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 ${esc(last4 || '0000')}" required></label>
+        <button class="btn primary wide" type="submit">Продолжить</button>
+        <p class="form-err" role="alert"></p>
+      </form>`;
+  } else if (step === 'loading') {
+    body.innerHTML = `<div class="loader"><div class="spinner"></div><div>Загружаю данные из банка…</div></div>`;
+  }
+  $('#auth').hidden = false;
+  document.body.classList.add('noscroll');
+  const first = body.querySelector('input:not([value]), input[value=""]') || body.querySelector('input');
+  if (first) setTimeout(() => first.focus(), 60);
+}
+function hideAuth() { $('#auth').hidden = true; document.body.classList.remove('noscroll'); auth.pass = ''; auth.sessionId = null; }
+function authError(msg) { const e = $('#authBody .form-err'); if (e) e.textContent = msg; else toast(msg); }
+function setBusy(form, busy, label) {
+  auth.busy = busy;
+  const b = form?.querySelector('button[type="submit"]'); if (!b) return;
+  if (busy) { b.dataset.label = b.textContent; b.textContent = label || 'Проверяю…'; b.disabled = true; }
+  else { b.textContent = b.dataset.label || b.textContent; b.disabled = false; }
+}
+
+async function submitLogin(form) {
+  const u = form.elements.username.value.trim(), p = form.elements.password.value;
+  if (!u || !p) { authError('Введите логин и пароль'); return; }
+  setBusy(form, true, 'Отправляю…');
+  try {
+    const r = await api('Authorization/AuthorizeByPassword', { body: { UserName: u, Password: p, HostName: CONFIG.bankHost }, auth: false });
+    save(KEY.user, u);
+    auth.user = u; auth.pass = p;
+    if (typeof r.Result === 'string' && r.Result.split('.').length === 3) { setSession(r.Result); await afterLogin(); return; }
+    if (typeof r.Result !== 'string' || !r.Result) throw new ApiError('Банк не вернул сессию для подтверждения входа', 'bank');
+    auth.sessionId = r.Result;
+    showAuth('otp');
+  } catch (e) { setBusy(form, false); authError(e.message); }
+}
+async function submitOtp(form) {
+  const code = form.otp.value.replace(/\s/g, '');
+  if (!code) { authError('Введите код из SMS'); return; }
+  if (!auth.sessionId) { showAuth('login'); return; }
+  setBusy(form, true, 'Проверяю…');
+  try {
+    const r = await api('Authorization/AuthorizeByToken', { body: { OTP: code, HostName: CONFIG.bankHost }, auth: false, sessionId: auth.sessionId });
+    if (typeof r.Result !== 'string' || r.Result.split('.').length !== 3) throw new ApiError('Банк не выдал ключ доступа. Попробуйте войти ещё раз.', 'bank');
+    setSession(r.Result);
+    await afterLogin();
+  } catch (e) { setBusy(form, false); authError(e.message); }
+}
+function luhn(num) { let s = 0, alt = false; for (let i = num.length - 1; i >= 0; i--) { let d = +num[i]; if (alt) { d *= 2; if (d > 9) d -= 9; } s += d; alt = !alt; } return s % 10 === 0; }
+async function submitPan(form) {
+  const pan = form.pan.value.replace(/\D/g, '');
+  const last4 = String(auth.card?.MaskedPan || '').replace(/\D/g, '').slice(-4);
+  if (pan.length < 13 || pan.length > 19 || !luhn(pan)) { authError('Похоже, в номере опечатка — проверьте цифры'); return; }
+  if (last4 && !pan.endsWith(last4)) { authError(`Последние цифры не совпадают с картой •••• ${last4}`); return; }
+  setPan(auth.card.ProductId, pan);
+  await afterLogin();
+}
+async function afterLogin() {
+  auth.pass = '';
+  showAuth('loading');
+  await refresh({ fromAuth: true });
+}
+
+/* =====================================================================
+   ЗАГРУЗКА ДАННЫХ
+   ===================================================================== */
+let refreshing = null;
+function refresh({ fromAuth = false } = {}) {
+  if (!sessionValid()) { onSessionEnded(); return Promise.resolve(); }
+  if (refreshing) return refreshing;
+  state.loading = true; if (DATA) renderTop();
+  refreshing = (async () => {
+    try {
+      const data = await loadAll();
+      if (data.needPan) { showAuth('pan', { card: data.card }); return; }
+      DATA = data;
+      if (!save(KEY.cache, DATA)) console.warn('Не удалось сохранить данные на устройстве');
+      state.loading = false;
+      renderAll();
+      hideAuth();
+    } catch (e) {
+      if (e.kind === 'auth') { clearSession(); onSessionEnded(e.message); }
+      else if (fromAuth) { showAuth('login'); authError(e.message); }
+      else toast(e.message);
+    } finally {
+      state.loading = false; refreshing = null;
+      if (DATA) renderTop();
+    }
+  })();
+  return refreshing;
+}
+const SESSION_ENDED = 'Сессия банка закончилась — войдите снова.';
+// сессия кончилась: старые данные остаются под формой, сверху сразу открывается вход
+function onSessionEnded(msg) {
+  if (DATA) renderAll();
+  showAuth('login');
+  if (msg) authError(SESSION_ENDED);
+}
+async function logout() {
+  clearSession(); drop(KEY.cache); DATA = null; M = null;
+  try { await fetch('/api/_logout', { method: 'POST', credentials: 'same-origin' }); } catch (e) {}
+  $('#app').hidden = true;
+  showAuth('login');
+}
+
+/* =====================================================================
+   СОБЫТИЯ
+   ===================================================================== */
+let toastTimer = null;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), 4000);
+}
+
+document.addEventListener('click', e => {
+  if (e.target.id === 'sheetWrap') { closeSheet(); return; }
+  const bar = e.target.closest('.bar-g');
+  if (bar) { state.selDay = state.selDay === bar.dataset.day ? null : bar.dataset.day; renderSpend(); return; }
+  const a = e.target.closest('[data-action]'); if (!a) return;
+  switch (a.dataset.action) {
+    case 'tx': openTx(a.dataset.id); break;
+    case 'toggle-hide': toggleHide(); break;
+    case 'month': {
+      const ms = monthsAvailable(), i = ms.indexOf(state.month) + Number(a.dataset.dir);
+      if (ms[i]) { state.month = ms[i]; state.selDay = null; renderSpend(); if (state.cat) renderTx(); }
+      break;
+    }
+    case 'cat':
+      state.cat = state.cat === a.dataset.cat ? null : a.dataset.cat;
+      renderSpend(); renderTx();
+      if (state.cat && window.innerWidth < 900) $('#tx').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      break;
+    case 'clear-cat': state.cat = null; renderSpend(); renderTx(); break;
+    case 'rate-kind': prefs.rateKind = a.dataset.kind; savePrefs(); renderAll(); break;
+    case 'rates-all': state.showAllRates = !state.showAllRates; renderRates(); break;
+    case 'refresh': if (sessionValid()) refresh(); else showAuth('login'); break;
+    case 'login': showAuth('login'); break;
+    case 'auth-cancel': auth.dismissedAt = Date.now(); hideAuth(); renderAll(); break;
+    case 'auth-back': showAuth('login'); break;
+    case 'hide-hint': save(KEY.hint, true); renderNotices(); break;
+    case 'logout': if (confirm('Выйти и удалить данные с этого устройства?')) logout(); break;
+    case 'close-sheet': closeSheet(); break;
+  }
+});
+document.addEventListener('submit', e => {
+  e.preventDefault();
+  if (auth.busy) return;
+  const f = e.target;
+  if (f.id === 'fLogin') submitLogin(f);
+  else if (f.id === 'fOtp') submitOtp(f);
+  else if (f.id === 'fPan') submitPan(f);
+});
+document.addEventListener('input', e => {
+  const id = e.target.id;
+  if (id === 'q') { state.q = e.target.value.trim().toLowerCase(); renderTx(); }
+  else if (id === 'convAmd') { state.conv.from = 'amd'; state.conv.amd = e.target.value; updateConv(); }
+  else if (id === 'convFx') { state.conv.from = 'fx'; state.conv.fx = e.target.value; updateConv(); }
+  else if (e.target.name === 'otp') {
+    const v = e.target.value.replace(/\D/g, '');
+    if (v !== e.target.value) e.target.value = v;
+  }
+});
+document.addEventListener('change', e => { if (e.target.id === 'convCur') { state.conv.cur = e.target.value; updateConv(); } });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && sheetOpen) closeSheet();
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList?.contains('hero-tap')) { e.preventDefault(); toggleHide(); }
+});
+// приложение с экрана «Домой» iPhone держит в памяти и само не перечитывает:
+// при возврате сверяем версию с Worker’ом и перезагружаемся, если вышла новая
+const BUILD = '__BUILD__';
+async function checkUpdate() {
+  try {
+    const r = await fetch('/version', { cache: 'no-store' });
+    if (!r.ok) return false;
+    const v = (await r.text()).trim();
+    const midLogin = !$('#auth').hidden && (auth.busy || ['otp', 'pan', 'loading'].includes(auth.step));
+    if (/^[0-9a-f]{8}$/.test(v) && v !== BUILD && !midLogin) { location.reload(); return true; }
+  } catch (e) {}
+  return false;
+}
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState !== 'visible') return;
+  if (await checkUpdate()) return;
+  if (DATA) renderTop();
+  if (sessionValid()) { if (!DATA || Date.now() - DATA.at > CONFIG.autoRefreshSec * 1000) refresh(); }
+  else if ($('#auth').hidden && Date.now() - auth.dismissedAt > 10 * 60000) showAuth('login'); // не навязываться, если только что нажали «Не сейчас»
+});
+
+/* ---------- старт ---------- */
+applyHide();
+$('#sheetClose').innerHTML = icon('x');
+$('#searchIco').innerHTML = icon('search');
+if (location.protocol === 'file:') {
+  showAuth('login');
+  authError('Откройте приложение по адресу вашего Worker’а: из файла банк недоступен.');
+} else {
+  if (DATA) renderAll();
+  if (sessionValid()) { if (!DATA) showAuth('loading'); refresh({ fromAuth: !DATA }); }
+  else showAuth('login');
+}
+setInterval(() => { if (DATA && !$('#app').hidden) renderTop(); }, 30000);
+</script>
+</body>
+</html>
