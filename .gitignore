@@ -1,12 +1,9 @@
-# Выгрузки из DevTools: в них открытым текстом пароль, код OTP и ключи доступа
 *.har
 *.harx
 
-# Сохранённые ответы API со своими данными
 responses/
 *.response.json
 
-# Служебное
 dist/icon-preview.png
 __pycache__/
 node_modules/
